@@ -2,6 +2,7 @@
 import backend,sys
 import PySimpleGUI as sg
 import elevate
+import re
 
 elevate.elevate() # promoting the premision levels 
 
@@ -32,6 +33,9 @@ emailAppLayout = [
 
 mainWindow = sg.Window(title="EMAIL Application",layout = emailAppLayout,grab_anywhere=True,keep_on_top=True,no_titlebar=True,resizable=False)
                                     #Keeping the window on top of others and removing the title bar which removes the task bar icon
+
+EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")     #creates a regex object
+
 while True:
     
     event, values = mainWindow.read()
@@ -42,7 +46,8 @@ while True:
         mainWindow.close()
         sys.exit(0)
     elif event == "SEND":
-        if values['-semail-'] != "" and values['-spass-'] != "" and values['-remail-'] != "":    #entry data check
+        # entry data check
+        if EMAIL_REGEX.match(values['-semail-']) and values['-spass-'] != "" and EMAIL_REGEX.match(values['-remail-']):
             
             if values['-subject-'] == "":          #assign default to subject
                 values['-subject-'] == "No Subject"
